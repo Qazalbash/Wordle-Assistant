@@ -84,11 +84,6 @@ void Wordle::start()
             {
                 final_word[i] = input_word[i];
 
-                if (yellow.find(input_word[i]) != yellow.end())
-                {
-                    yellow.erase(input_word[i]);
-                }
-
                 for (int j = 97; j < 123; j++)
                 {
                     if (j != (int)input_word[i])
@@ -96,6 +91,8 @@ void Wordle::start()
                         no_map[i].insert((char)j);
                     }
                 }
+
+                yellow.insert(input_word[i]);
             }
         }
 
@@ -105,10 +102,19 @@ void Wordle::start()
             yellow.insert(input_word[i]);
         }
 
-        else if (result[i] == 'B' || result[i] == 'b' ||
-                 result[i] == 'W' || result[i] == 'w')
+        else if (result[i] != 'B' && result[i] != 'b' &&
+                 result[i] != 'W' && result[i] != 'w')
         {
-            if (yellow.find(input_word[i]) == yellow.end() &&
+            std::cout << "The input is wrong" << std::endl;
+            start();
+        }
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        if (result[i] == 'B' || result[i] == 'b' ||
+            result[i] == 'W' || result[i] == 'w')
+        {
+            if (yellow.find(input_word[i]) == yellow.end() ||
                 final_word.find(input_word[i]) == std::string::npos)
             {
                 for (int j = 0; j < 5; j++)
@@ -117,12 +123,6 @@ void Wordle::start()
                 }
             }
         }
-
-        else
-        {
-            std::cout << "The input is wrong" << std::endl;
-            start();
-        }
     }
 
     std::cout << std::endl
@@ -130,18 +130,6 @@ void Wordle::start()
               << "Word is becoming = " << final_word << std::endl
               << std::endl
               << std::endl;
-
-    for (std::map<int, std::set<char>>::iterator it = no_map.begin();
-         it != no_map.end(); ++it)
-    {
-        std::cout << (*it).first << ": ";
-        for (std::set<char>::iterator it2 = ((*it).second).begin();
-             it2 != ((*it).second).end(); it2++)
-        {
-            std::cout << *it2 << ", ";
-        }
-        std::cout << std::endl;
-    }
 
     guess_word(input_word);
 }
