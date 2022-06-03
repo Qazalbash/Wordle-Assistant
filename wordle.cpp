@@ -31,7 +31,7 @@ void Wordle::fill_bucket(std::string filename)
 
 void Wordle::game()
 {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         // if there is no * in our final_word then it is the answer
         if (final_word.find('*') == std::string::npos)
