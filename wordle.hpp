@@ -1,26 +1,32 @@
 #include <map>
 #include <set>
 #include <string>
-#include <vector>
 #include <fstream>
 #include <iostream>
 
 class Wordle
 {
 public:
-    void game();
-    Wordle(const std::string);
+    void game();               // main game
+    Wordle(const std::string); // Constructor
 
 private:
+    // file object that reads the words
     std::ifstream file;
-    std::set<char> yellow;
-    std::map<int, std::set<char>> no_map;
+    // set of all letters that are allowed in the final word
+    std::set<char> allowed;
+    // the hidden word
     std::string final_word = "*****";
-    std::set<std::string> bucket = {}, default_bucket = {};
+    // map that contains the all the allowed words at each position
+    std::map<int, std::set<char>> yes_map;
+    // bucket is the word set that we contain after deducing the words from logic
+    // big_bucket is all words
+    std::set<std::string> bucket = {}, big_bucket = {};
 
+    // starts the game by taking input and sorting them
     void start();
+    // reduce the bucket by logic
     void guess_word(std::string);
+    // read the file and fill the bucket
     void fill_bucket(std::string);
-
-    bool warning(std::string, std::string, const int);
 };
