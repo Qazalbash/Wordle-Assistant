@@ -1,5 +1,7 @@
 # Wordle-Assistant
 
+[![Watch the video](https://i.pcmag.com/imagery/articles/01O9cD990ECgKwgagoHBoTW-2..v1642710512.png)](test.mp4)
+
 ## Description
 
 [Wordle](https://www.nytimes.com/games/wordle/index.html) is a popular game developed by [New York Times](https://www.nytimes.com/).
@@ -53,9 +55,3 @@ Enter the colors: ybgyy
 ```
 
 This process will repeat until the moves are over or the word has been guessed.
-
-<figure class="video_container">
-  <video controls="true" allowfullscreen="true">
-    <source src="test.webm" type="video/webm">
-  </video>
-</figure>
