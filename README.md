@@ -39,3 +39,23 @@ Write this command in terminal to compile and run.
 ```bash
 cd "<PATH to directory>" && g++ assistant.cpp -o assistant && "<PATH to directory>/"assistant
 ```
+
+After this terminal will show a random word from knowlege base like
+
+```
+TRY WORD crane
+```
+
+Write that word in the wordle and enter the colors,
+
+```
+Enter the colors: ybgyy
+```
+
+This process will repeat until the moves are over or the word has been guessed.
+
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true">
+    <source src="test.webm" type="video/webm">
+  </video>
+</figure>
