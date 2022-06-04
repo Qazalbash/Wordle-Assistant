@@ -26,7 +26,7 @@ private:
     // starts the game by taking input and sorting them
     void start();
     // reduce the bucket by logic
-    void guess_word(std::string);
+    void guess_word();
     // read the file and fill the bucket
     void fill_bucket(std::string);
 };
