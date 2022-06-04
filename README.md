@@ -1,6 +1,6 @@
 # Wordle-Assistant
 
-[![Watch the video](https://i.pcmag.com/imagery/articles/01O9cD990ECgKwgagoHBoTW-2..v1642710512.png)](test.mp4)
+[![Watch the video](https://i.pcmag.com/imagery/articles/01O9cD990ECgKwgagoHBoTW-2..v1642710512.png)](https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=0m43s)
 
 ## Description
 
