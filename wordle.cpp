@@ -196,5 +196,10 @@ void Wordle::guess_word()
 
     bucket = demo;
     // print all the possible words from dataset
-    print("possible words = ", bucket);
+    // print("possible words = ", bucket);
+
+    if (bucket.size() == 1)
+    {
+        final_word = *bucket.begin();
+    }
 }
