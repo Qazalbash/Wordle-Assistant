@@ -1,3 +1,4 @@
+#include <ctime>
 #include "wordle.hpp"
 
 Wordle::Wordle(std::string fn)
