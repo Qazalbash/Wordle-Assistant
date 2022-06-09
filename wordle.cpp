@@ -15,6 +15,7 @@ void Wordle::fill_bucket(std::string filename)
         file >> w;            // reading the words line by line
         big_bucket.insert(w); // inserting into bucket
     }
+    file.close();
 
     bucket = big_bucket;
     /*
@@ -32,23 +33,23 @@ void Wordle::fill_bucket(std::string filename)
 
 void Wordle::game()
 {
+    score.open("score.txt", std::ios::app);
     for (int i = 0; i < 6; i++)
     {
-        // if there is no * in our final_word then it is the answer
-        if (final_word.find('*') == std::string::npos)
-        {
-            std::cout << std::endl
-                      << std::endl
-                      << "############################################################" << std::endl
-                      << "There is high probablity to win this Wordle with word: " << final_word << std::endl
-                      << "############################################################" << std::endl;
-            break;
-        }
-        else
-        {
-            start();
-        }
+        start();
     }
+    score << "\n";
+    if (win)
+    {
+        score << "win";
+    }
+    else
+    {
+        score << "lose";
+    }
+    score << "\n";
+
+    score.close();
 }
 
 template <class T>
@@ -95,13 +96,15 @@ bool color_check(std::string colors)
 
 void Wordle::start()
 {
-    // std::cout << "Probability of being correct " << 1 << "/" << sample_space_size << std::endl;
-
     srand(time(0));
     std::string guessed_word, result;
-
     sample_space_size = bucket.size();
-    if (sample_space_size)
+
+    if (win)
+    {
+        score << 1 << " ";
+    }
+    else if (sample_space_size > 0)
     {
         guessed_word = *std::next(bucket.begin(), rand() % bucket.size());
 
@@ -160,11 +163,15 @@ void Wordle::start()
                   << std::endl;
 
         // guessing the words
-
         guess_word();
+
+        score << sample_space_size << " ";
+        win = result == "ggggg";
     }
-    else
+
+    else if (sample_space_size == 0)
     {
+        win = false;
         std::cout << "No more option left" << std::endl;
     }
 }
@@ -204,4 +211,5 @@ void Wordle::guess_word()
     }
 
     bucket = demo;
+    sample_space_size = bucket.size();
 }

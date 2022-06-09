@@ -13,6 +13,7 @@ public:
 private:
     // file object that reads the words
     std::ifstream file;
+    std::ofstream score;
     // set of all letters that are allowed in the final word
     std::set<char> allowed;
     // the hidden word
@@ -23,6 +24,7 @@ private:
     // big_bucket is all words
     std::set<std::string> bucket = {}, big_bucket = {};
 
+    bool win = false;
     float sample_space_size;
     // starts the game by taking input and sorting them
     void start();
