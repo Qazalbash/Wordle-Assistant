@@ -12,11 +12,11 @@ void Wordle::fill_bucket(std::string filename)
     std::string w;
     while (file)
     {
-        file >> w;        // reading the words line by line
-        bucket.insert(w); // inserting into bucket
+        file >> w;            // reading the words line by line
+        big_bucket.insert(w); // inserting into bucket
     }
 
-    big_bucket = bucket;
+    bucket = big_bucket;
     /*
     at start all 26 letters are equally likely at all
     positions so adding them in the yes_map
@@ -82,83 +82,91 @@ bool warning(std::string message, std::string var, const int size)
     return false;
 }
 
+bool color_check(std::string colors)
+{
+    bool again = false;
+    std::set<char> color = {'B', 'Y', 'G', 'W', 'b', 'y', 'g', 'w'};
+    for (int i = 0; i < 5; i++)
+    {
+        again = again && (color.find(colors[i]) != color.end());
+    }
+    return again;
+}
+
 void Wordle::start()
 {
+    // std::cout << "Probability of being correct " << 1 << "/" << sample_space_size << std::endl;
+
     srand(time(0));
     std::string guessed_word, result;
-    if (bucket.size())
+
+    sample_space_size = bucket.size();
+    if (sample_space_size)
     {
         guessed_word = *std::next(bucket.begin(), rand() % bucket.size());
+
+        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl
+                  << std::endl
+                  << "Probability of being correct " << 1 / sample_space_size << std::endl
+                  << std::endl
+                  << "TRY WORD " << guessed_word << std::endl;
+
+        do
+        {
+            input("Enter the colors: ", result);
+        } while (warning("Word should be of length", result, 5) || color_check(result));
+
+        // sroting the input word to the respective places in accordance to result
+        for (int i = 0; i < 5; i++)
+        {
+            if (result[i] == 'G' || result[i] == 'g')
+            {
+                if (final_word[i] == '*')
+                {
+                    final_word[i] = guessed_word[i];
+
+                    yes_map[i] = {guessed_word[i]};
+
+                    allowed.insert(guessed_word[i]);
+                }
+            }
+
+            else if (result[i] == 'Y' || result[i] == 'y')
+            {
+                yes_map[i].erase(guessed_word[i]);
+                allowed.insert(guessed_word[i]);
+            }
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            if (result[i] == 'B' || result[i] == 'b' ||
+                result[i] == 'W' || result[i] == 'w')
+            {
+                if (allowed.find(guessed_word[i]) == allowed.end())
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        yes_map[j].erase(guessed_word[i]);
+                    }
+                }
+                else
+                {
+                    yes_map[i].erase(guessed_word[i]);
+                }
+            }
+        }
+
+        std::cout << "Word is becoming = " << final_word << std::endl
+                  << std::endl;
+
+        // guessing the words
+
+        guess_word();
     }
     else
     {
         std::cout << "No more option left" << std::endl;
     }
-
-    std::cout << std::endl
-              << "TRY WORD " << guessed_word << std::endl;
-
-    do
-    {
-        input("Enter the colors: ", result);
-    } while (warning("Word should be of length", result, 5));
-
-    if (
-        result.find('B') != std::string::npos && result.find('b') != std::string::npos &&
-        result.find('Y') != std::string::npos && result.find('y') != std::string::npos &&
-        result.find('G') != std::string::npos && result.find('g') != std::string::npos &&
-        result.find('W') != std::string::npos && result.find('w') != std::string::npos)
-    {
-        std::cout << "The input is wrong" << std::endl;
-        start();
-    }
-
-    // sroting the input word to the respective places in accordance to result
-    for (int i = 0; i < 5; i++)
-    {
-        if (result[i] == 'G' || result[i] == 'g')
-        {
-            if (final_word[i] == '*')
-            {
-                final_word[i] = guessed_word[i];
-
-                yes_map[i] = {guessed_word[i]};
-
-                allowed.insert(guessed_word[i]);
-            }
-        }
-
-        else if (result[i] == 'Y' || result[i] == 'y')
-        {
-            yes_map[i].erase(guessed_word[i]);
-            allowed.insert(guessed_word[i]);
-        }
-    }
-    for (int i = 0; i < 5; i++)
-    {
-        if (result[i] == 'B' || result[i] == 'b' ||
-            result[i] == 'W' || result[i] == 'w')
-        {
-            if (allowed.find(guessed_word[i]) == allowed.end())
-            {
-                for (int j = 0; j < 5; j++)
-                {
-                    yes_map[j].erase(guessed_word[i]);
-                }
-            }
-            else
-            {
-                yes_map[i].erase(guessed_word[i]);
-            }
-        }
-    }
-
-    std::cout << "Word is becoming = " << final_word << std::endl
-              << std::endl;
-
-    // guessing the words
-
-    guess_word();
 }
 
 void Wordle::guess_word()
@@ -196,11 +204,4 @@ void Wordle::guess_word()
     }
 
     bucket = demo;
-    // print all the possible words from dataset
-    // print("possible words = ", bucket);
-
-    if (bucket.size() == 1)
-    {
-        final_word = *bucket.begin();
-    }
 }
