@@ -23,6 +23,7 @@ private:
     // big_bucket is all words
     std::set<std::string> bucket = {}, big_bucket = {};
 
+    float sample_space_size;
     // starts the game by taking input and sorting them
     void start();
     // reduce the bucket by logic
