@@ -11,7 +11,7 @@ public:
     Wordle(const std::string); // Constructor
 
 private:
-    // file object that reads the words
+    // file object that read/write
     std::ifstream file;
     std::ofstream score;
     // set of all letters that are allowed in the final word
@@ -24,7 +24,9 @@ private:
     // big_bucket is all words
     std::set<std::string> bucket = {}, big_bucket = {};
 
+    // true if the game has been won
     bool win = false;
+    // stores the size of set of all possible words
     float sample_space_size;
     // starts the game by taking input and sorting them
     void start();

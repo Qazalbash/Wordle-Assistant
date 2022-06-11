@@ -8,15 +8,20 @@ Wordle::Wordle(std::string fn)
 
 void Wordle::fill_bucket(std::string filename)
 {
-    file.open(filename);
     std::string w;
+    file.open(filename);
+
     while (file)
     {
         file >> w;            // reading the words line by line
         big_bucket.insert(w); // inserting into bucket
     }
-    file.close();
 
+    file.close();
+}
+
+void Wordle::game()
+{
     bucket = big_bucket;
     /*
     at start all 26 letters are equally likely at all
@@ -29,31 +34,28 @@ void Wordle::fill_bucket(std::string filename)
             yes_map[i].insert((char)j);
         }
     }
-}
 
-void Wordle::game()
-{
     score.open("score.txt", std::ios::app);
+
     for (int i = 0; i < 6; i++)
     {
         start();
     }
-    score << "\n";
+
     if (win)
     {
-        score << "win";
+        score << "\nwin\n";
     }
     else
     {
-        score << "lose";
+        score << "\nlose\n";
     }
-    score << "\n";
 
     score.close();
 }
 
 template <class T>
-void input(std::string message, T &var)
+void input(const std::string &message, T &var)
 {
     std::cout << std::endl
               << message;
@@ -61,29 +63,20 @@ void input(std::string message, T &var)
     std::cout << std::endl;
 }
 
-template <class T>
-void print(std::string message, std::set<T> set)
+bool warning(const std::string &message,
+             const std::string &var,
+             const int size)
 {
-    std::cout << message;
-    for (auto set_iter = set.begin();
-         set_iter != set.end(); ++set_iter)
+    if (var.size() == size)
     {
-        std::cout << *set_iter << "\t";
+        return false;
     }
-    std::cout << std::endl;
-}
-
-bool warning(std::string message, std::string var, const int size)
-{
-    if (var.size() != size)
-    {
-        std::cout << message << " " << size << std::endl;
-        return true;
-    }
-    return false;
+    std::cout << message << " " << size << std::endl;
+    return true;
 }
 
 bool color_check(std::string colors)
+// checks if all colors are valid
 {
     bool again = false;
     std::set<char> color = {'B', 'Y', 'G', 'W', 'b', 'y', 'g', 'w'};
@@ -106,6 +99,7 @@ void Wordle::start()
     }
     else if (sample_space_size > 0)
     {
+        // randomly selects a word from set of all equally likely words
         guessed_word = *std::next(bucket.begin(), rand() % bucket.size());
 
         std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl
@@ -178,7 +172,7 @@ void Wordle::start()
 
 void Wordle::guess_word()
 {
-    std::set<std::string> demo = bucket;
+    std::set<std::string> demo = {};
 
     // filter only those words, whose each letter is allowed by yes_map at that place
     for (std::map<int, std::set<char>>::iterator nm = yes_map.begin();
@@ -189,12 +183,10 @@ void Wordle::guess_word()
         {
             if (((*nm).second).find((*b)[(*nm).first]) == ((*nm).second).end())
             {
-                demo.erase(*b);
+                demo.insert(*b);
             }
         }
     }
-
-    bucket = demo;
 
     // filter those words which contain all the allowed words
     for (std::set<std::string>::iterator b = bucket.begin();
@@ -205,11 +197,16 @@ void Wordle::guess_word()
         {
             if ((*b).find(*a) == std::string::npos)
             {
-                demo.erase(*b);
+                demo.insert(*b);
             }
         }
     }
 
-    bucket = demo;
+    for (std::set<std::string>::iterator it = demo.begin();
+         it != demo.end(); ++it)
+    {
+        bucket.erase(*it);
+    }
+
     sample_space_size = bucket.size();
 }
