@@ -54,6 +54,6 @@ class Wordle:
 
 
 if __name__ == '__main__':
-    w = Wordle('./allowed_words.txt')
+    w = Wordle('../allowed_words.txt')
     for i in range(1, 7):
         w.turn(i)
